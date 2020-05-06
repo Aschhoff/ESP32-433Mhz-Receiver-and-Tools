@@ -12,7 +12,10 @@ Here you can develop and implement your own decoder.
 You can configure the decoder output to a user friendly name or OpenHab Item  
 Config for SSID, Password, UDP socket IP and OpenHab URL
   
-  
+**Install:**  
+Copy the files rx433_ESP.py wifi.py and rx433_config.py to ESP32
+Make a directory rx433_decoder and copy the decoder files.
+
 ## Windows Tools 
 connect the ESP32 via USB and be sure to enable Debug=on in the config file!  
 
