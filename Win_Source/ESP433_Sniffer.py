@@ -25,26 +25,37 @@
 
 #----------------------------- ESP 433Mhz Sniffer ---------------------------
 
-#   on ESP must run rx433_esp_auto.py
+#   on ESP must run rx433_ESP433RX.py and debug = on
 
 #----------------------------------------------------------------------------        
 def serialOn():
     global ser
-    for comport in comliste:
+    for port in range(3,9):
+        comport="COM"+str(port)+":"
         try:
             ser = serial.Serial(port=comport,baudrate=115200)
             serialopen=True
         except Exception as e:
-            print ("error open serial port: " + str(e))
+            #print ("error open serial port: " + str(e))
             serialopen=False            
         if serialopen == True:
-            time.sleep(2)
-            #ESPsend(chr(3))
-            if ser.inWaiting() > 1000:
-                ser.read()
+            ESPsend(chr(3))
+            ESPsend(chr(4))
+            time.sleep(1)
+            
+            if ser.inWaiting() != 0:
+                a=ser.read()
                 return (comport)
+            else:
+                serialopen=False
     return ("Error")        
 
+def ESPsend(out):
+    out+="\r\n"
+    out=out.encode("utf-8")
+    ser.write(out)
+    time.sleep(0.05)                # sonst verschluckt sich der ESP
+    
 def anzeigeLeer():
     textRaw.delete('1.0', END)
     
@@ -161,7 +172,6 @@ from tkinter.messagebox import *
 root=Tk()
 root.title("ESP 433 Sniffer")
 
-comliste=("COM2:","COM3:","COM4:","COM5:","COM6:")
 filename="ESP433Logger.csv"
 anzDec=[]
 blink=0
