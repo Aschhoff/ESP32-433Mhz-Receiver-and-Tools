@@ -33,7 +33,7 @@ def dekode(li):
     addr=0
     state=0
     
-    out["prot"]="ev1527"        # Name of Protokol
+    out["prot"]="kerui"        # Name of Protokol
     #for n in range (20):
     #  addr+=li[19-n]*2**n
     for n in range (20):
