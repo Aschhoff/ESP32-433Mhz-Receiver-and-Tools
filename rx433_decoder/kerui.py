@@ -1,4 +1,4 @@
-""" ev1527 Protokoll
+""" kerui Protokoll
 popular for cheap contacts or switches with HS1527 chip
 
 Timings:
