@@ -47,7 +47,8 @@ def serialOn():
         if serialopen == True:
             ESPsend(chr(3))
             time.sleep(1)
-            
+            ESPsend(chr(3))
+            time.sleep(1)            
             if ser.inWaiting() != 0:
                 a=ser.read()
                 print(a)
@@ -97,6 +98,7 @@ def ESPloaddir():
     ESPsend("import os")
     ser.reset_input_buffer()
     ESPsend("os.listdir()")
+    time.sleep(0.5)
     txt1=ser.readline()     # Echo vom gesendetem Befehle abholen
     txt2=ser.readline()     # Daten vom ESP
     txt=txt2.decode()
@@ -114,15 +116,16 @@ def saveconfig():
     else:
         hinweis.config(text="Fehler in der USB Verbindung")
 
-def loaddir():
+def loaddir(file):
     textfeld.delete('1.0', END)     # Textfeld leer machen
     listdir=ESPloaddir()
     match=[]
+    filename="Error"
     for i in listdir:
-        if i.find("config")!= -1:   # match auf 'config' im File
+        if i.find(file)!= -1:   # match auf file in Listdir
             match.append(i)
             print(i)
-    filename=match[0]               # am Anfang und Ende ' und lf weg
+    if match!=[]:filename=match[0]   
     return(filename)
     
 def loadconfig():
@@ -166,7 +169,7 @@ hinweis.pack(side="left")
 
 #------------------------------------------------------------------------------------
 
-filename="rx433_config.py"
+file="config.py" # Editor File
 
 while True:
     err=serialOn()
@@ -176,13 +179,15 @@ while True:
         break
     else:
         if askyesno("Keinen ESP am COM Port gefunden!", "Nochmal versuchen?"):
-            a=ser.read()
-            ser.close()
-            pass
+
+            continue
         else:
             exit()
-
-filename=loaddir()
+print("--",ser)
+filename=loaddir(file)
+if filename=="Error":
+    if showwarning(file+" nicht gefunden!\n Abbruch"):
+        exit()
 loadconfig()
 
 root.mainloop()       
